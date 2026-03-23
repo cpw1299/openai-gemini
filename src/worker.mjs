@@ -20,7 +20,7 @@ export default {
       const { pathname } = new URL(request.url);
 
       console.log(`\n=== [Incoming Request] ===`);
-      console.log(`${request.method} ${request.url}`);
+      console.log(`${request.method} ${request.url}`, pathname);
 
       switch (true) {
         case pathname.endsWith("/chat/completions"):
@@ -212,12 +212,16 @@ async function handleCompletions (req, apiKey) {
     url += (url.includes("?") ? "&" : "?") + `key=${apiKey}`;
   }
   const headers = makeHeaders({ "Content-Type": "application/json" });
-
+  console.log(`\n=== [Gemini API Request] ===`);
+  console.log(`POST ${url}`);
+  console.log(`Headers:`, JSON.stringify(headers, null, 2));
+  console.log(`Body:`, JSON.stringify(body, null, 2));
   const response = await fetch(url, {
     method: "POST",
     headers: headers,
     body: JSON.stringify(body),
   });
+  console.log(`Response:`, JSON.stringify(response, null, 2));
 
   body = response.body;
   if (response.ok) {
